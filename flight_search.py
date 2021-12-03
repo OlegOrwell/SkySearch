@@ -30,6 +30,8 @@ class FlightSearch:
         self.destPoint = destPoint
         self.dateF = dateF
         self.dateT = dateT
+        if len(self.dateT) < 3:
+            self.dateT = (datetime.today() + relativedelta(days=+1)).strftime("%d/%m/%Y")
 
         now = datetime.today()
         some_time = datetime(now.year, now.month, now.day)
