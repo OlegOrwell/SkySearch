@@ -16,14 +16,14 @@ class FlightUi:
         self.window = Tk()
         self.window.config(bg=THEME_COLOR, padx=20, pady=20)
         self.window.title("Sky search")
-        self.window.geometry("850x600")
+        self.window.geometry("1050x900")
 
         self.canvas = Canvas(width=600, height=400)
         self.canvas.config(bg='white')
         # self.canvas.config(xpad=20, ypad=20)
         #  self.question_text = self.canvas.create_text(110, 150, text="Pewpew", font=FONT,
         #                                               width=200, fill=THEME_COLOR)
-        self.canvas.grid(row=1, column=0, columnspan=2, pady=8)
+        self.canvas.grid(row=1, column=0, columnspan=2, pady=20)
 
         Label(self.canvas, text="Город вылета", bg="white").grid(row=0)
         Label(self.canvas, text="Город прилёта", bg="white").grid(row=1)
@@ -46,7 +46,7 @@ class FlightUi:
         self.e2.grid(row=2, column=1)
         self.e3.grid(row=3, column=1)
 
-        Button(self.canvas, text='Quit', command=self.window.quit).grid(row=4, column=0, sticky=W, pady=5, padx=80)
+        Button(self.canvas, text='Quit', command=self.window.quit).grid(row=4, column=0, sticky=W, pady=4, padx=80)
         Button(self.canvas, text='Find', command=self.Del).grid(row=4, column=1, sticky=W, pady=4, padx=60)
         Button(self.window, text='min price sort', command=self.anotherDel).grid(row=2, column=1, sticky=W, pady=4,
                                                                                  padx=0)
