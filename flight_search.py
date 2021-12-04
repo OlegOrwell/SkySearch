@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-
 import requests
 
 
 class FlightSearch:
-
     def __init__(self):
         self.URL = 'https://tequila-api.kiwi.com/v2/search'
         self.FLIGHT_API_KEY = 'oGsZRbP_OUkV2G7ULnr6tzWnnEWDdl1E'
@@ -32,10 +30,9 @@ class FlightSearch:
         self.dateT = dateT
         if len(self.dateT) < 3:
             self.dateT = (datetime.today() + relativedelta(days=+1)).strftime("%d/%m/%Y")
-
-        now = datetime.today()
-        some_time = datetime(now.year, now.month, now.day)
-        new_time = some_time + relativedelta(days=+1)
+        # now = datetime.today()
+        # some_time = datetime(now.year, now.month, now.day)
+        # new_time = some_time + relativedelta(days=+1)
         # print(datetime.today().strftime("%d/%m/%Y"))
         # print(new_time.strftime("%d/%m/%Y"))
 
@@ -46,46 +43,67 @@ class FlightSearch:
 
         response = requests.get(url=self.URL, params=self.BODY, headers=self.HEADERS)
         print(response)
-
-        #      print(response.json()[0]["duration"]['price'])
+        print(response.json()['data'])
         try:
             flight_num = len(response.json()['data'])
+            flight_data = response.json()['data']
         except KeyError:
             empty_list = []
             return empty_list
 
         self.DICT = []
 
-        for flight in range(flight_num):
-            price = response.json()['data'][0]['price']
-            dTime = response.json()['data'][0]['utc_departure']
-            aTime = response.json()['data'][0]['utc_arrival']
-            cityTo = response.json()['data'][0]['cityTo']
-            #            equipment = response.json()['data'][0]['equipment']
-            id = response.json()['data'][0]['id']
-            item = self.item_dict(price, dTime, aTime, id, cityTo)
+        for flight1 in flight_data:
+            names = ['price', 'utc_departure', 'utc_arrival', 'cityTo', 'flyFrom', 'flyTo', 'id', 'distance']
+            price = flight1['price']
+            dtime = flight1['local_departure']
+            atime = flight1['utc_arrival']
+            cityto = flight1['cityTo']
+            flyfrom = flight1['flyFrom']
+            flyto = flight1['flyTo']
+            duration = flight1['duration']['total']
+            distance = flight1['distance']
+           #            equipment = response.json()['data'][0]['equipment']
+            id = flight1['id']
+            item = self.item_dict(price, dtime, atime, id, cityto, flyfrom, flyto, duration, distance)
             self.DICT.append(item)
         #        print(self.DICT)
         seen = set()
-        newDict = []
+        newdict = []
         for d in self.DICT:
             t = tuple(d.items())
             if t not in seen:
                 seen.add(t)
-                newDict.append(d)
-        return newDict
+                newdict.append(d)
+        return newdict
 
-    def item_dict(self, price, dtime, atime, id, cityTo):
+    def item_dict(self, price, dtime, atime, id, cityto, flyfrom, flyto, duration, distance):
         self.price = price
         self.dtime = dtime
         self.atime = atime
         self.id = id
-        self.cityTo = cityTo
+        self.cityto = cityto
+        self.flyfrom = flyfrom
+        self.flyto = flyto
+        self.duration = duration
+        self.distance = distance
 
         item = {}
         item["Price"] = price
-        item["Departure_Time"] = self.dtime[0:10] + " " + self.dtime[12:16]
-        item["Arriving Time"] = self.atime[0:10] + " " + self.atime[12:16]
-        item["Arriving City"] = cityTo
-        item["id"] = id
+        item["Departure_Time"] = self.dtime[0:10] + " " + self.dtime[11:16]
+        item["Arriving Time"] = self.atime[0:10] + " " + self.atime[11:16]
+        item["Arriving City"] = self.cityto
+        item["id"] = self.id
+        item["flyFrom"] = self.flyfrom
+        item["flyTo"] = self.flyto
+        item["duration"] = self.get_time(self.duration)
+        item["distance"] = self.distance
         return item
+
+    def get_time(self, flighttime):
+        self.flighttime = flighttime
+        self.flighttimeminute= round(self.flighttime%36000*60)
+        self.flighttimhour = self.flighttime//36000
+        self.flighttime = f"{self.flighttimhour}h {str(self.flighttimeminute)[:2]}m"
+        return self.flighttime
+    
