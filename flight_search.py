@@ -42,8 +42,8 @@ class FlightSearch:
                      'date_to': self.dateT}
 
         response = requests.get(url=self.URL, params=self.BODY, headers=self.HEADERS)
-        print(response)
-        print(response.json()['data'])
+       # print(response)
+       # print(response.json()['data'])
         try:
             flight_num = len(response.json()['data'])
             flight_data = response.json()['data']
