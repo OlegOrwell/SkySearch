@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/css/style.css" />
+    <title>SkySearch</title>
+</head>
+<body>
+
+{% for flight in session["flights"] %}
+<table >
+    <tr>
+        <td> </td>
+        <td> <h1> Departure date is {{ flight['Departure_Time'][8:10] }}.{{ flight['Departure_Time'][5:7] }} </h1> </td>
+    </tr>
+
+    <tr>
+        <td><h2>{{flight['Departure_Time'][-5:]}}</h2></td>
+        <td> <h3> Time in air {{flight['duration']}} </h3> </td>
+        <td> <h2> {{flight['Arriving Time'][-5:]}} </h2></td>
+    </tr>
+    <tr>
+        <td> </td>
+        <td> <img src='static/images/flight_label.png' alt="arrow" /> </td>
+        <td> </td>
+    </tr>
+
+    <tr>
+        <td><h2>{{flight['flyFrom']}}</h2></td>
+        <td><h2>Price {{flight['Price']}} eur </h2></td>
+        <td><h2>{{flight['flyTo']}}</h2> </td>
+    </tr>
+    <tr> </tr>
+</table>
+{% endfor %}
+
+
+
+</body>
+</html>
